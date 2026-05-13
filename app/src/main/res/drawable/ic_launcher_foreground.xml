@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group android:translateX="24" android:translateY="24">
+        <!-- Four-swatch grid representing a 4-tone palette -->
+        <path
+            android:fillColor="#C84A1A"
+            android:pathData="M8,8 L26,8 L26,26 L8,26 Z"/>
+        <path
+            android:fillColor="#5A4D3C"
+            android:pathData="M34,8 L52,8 L52,26 L34,26 Z"/>
+        <path
+            android:fillColor="#3D7A4A"
+            android:pathData="M8,34 L26,34 L26,52 L8,52 Z"/>
+        <path
+            android:fillColor="#1C1612"
+            android:pathData="M34,34 L52,34 L52,52 L34,52 Z"/>
+        <!-- Border frame -->
+        <path
+            android:strokeColor="#1C1612"
+            android:strokeWidth="1.5"
+            android:fillColor="@android:color/transparent"
+            android:pathData="M6,6 L54,6 L54,54 L6,54 Z"/>
+    </group>
+</vector>

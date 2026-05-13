@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#f1ebdd">
+<title>Tonal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f1ebdd;--paper-2:#e9e1cf;--paper-3:#ddd2bb;--card:#faf6ec;
+  --ink:#1c1612;--ink-2:#5a4d3c;--ink-3:#9a8b76;
+  --rule:rgba(40,28,18,0.10);--rule-2:rgba(40,28,18,0.18);--rule-3:rgba(40,28,18,0.32);
+  --accent:#c84a1a;--accent-ink:#8a2f0e;--green:#3d7a4a;
+  --serif:'Fraunces',Georgia,serif;--sans:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;
+  --safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px);
+  --tabbar:64px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{background:var(--paper);color:var(--ink);font-family:var(--sans);min-height:100vh;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+body{overscroll-behavior-y:contain;padding-bottom:calc(var(--tabbar) + var(--safe-bot));}
+button{font-family:inherit;}
+.masthead{background:var(--paper);padding:calc(14px + var(--safe-top)) 20px 12px;border-bottom:1px solid var(--rule-2);display:flex;align-items:baseline;justify-content:space-between;position:sticky;top:0;z-index:40;}
+.brand-mark{font-family:var(--serif);font-weight:300;font-style:italic;font-size:26px;letter-spacing:-0.02em;color:var(--ink);font-variation-settings:"opsz" 144;}
+.brand-sub{font-family:var(--mono);font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-3);}
+.page{display:none;padding-bottom:20px;}
+.page.active{display:block;}
+.hero{padding:32px 20px 28px;border-bottom:1px solid var(--rule-2);}
+.hero-issue{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-3);margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+.hero-issue::after{content:"";flex:1;height:1px;background:var(--rule-3);}
+.hero-headline{font-family:var(--serif);font-weight:300;font-style:italic;font-size:46px;line-height:0.96;letter-spacing:-0.025em;color:var(--ink);font-variation-settings:"opsz" 144;text-wrap:balance;}
+.hero-headline em{font-style:normal;font-weight:400;color:var(--accent);}
+.hero-deck{font-family:var(--serif);font-weight:300;font-size:15px;line-height:1.55;color:var(--ink-2);margin-top:14px;}
+.hero-cta{margin-top:22px;background:var(--ink);color:var(--paper);border:none;padding:14px 20px;width:100%;font-family:var(--sans);font-size:11px;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;}
+.hero-cta:active{background:var(--accent);}
+.hero-cta svg{width:14px;height:14px;}
+.hero-ribbon{display:grid;grid-template-columns:repeat(6,1fr);border-top:1px solid var(--rule-2);border-bottom:1px solid var(--rule-2);}
+.hero-ribbon-cell{aspect-ratio:1;position:relative;display:flex;align-items:flex-end;padding:6px;}
+.hero-ribbon-cell:not(:nth-child(6n+1)){border-left:1px solid rgba(255,255,255,0.18);}
+.hero-ribbon-cell:nth-child(n+7){border-top:1px solid rgba(255,255,255,0.18);}
+.hero-ribbon-cell .num{position:absolute;top:6px;left:6px;font-family:var(--mono);font-size:8px;letter-spacing:0.1em;}
+.hero-ribbon-cell .name{font-family:var(--mono);font-size:8px;letter-spacing:0.06em;text-transform:uppercase;line-height:1.1;}
+.hero-ribbon-cell.dark .num,.hero-ribbon-cell.dark .name{color:rgba(255,255,255,0.88);}
+.hero-ribbon-cell.light .num,.hero-ribbon-cell.light .name{color:rgba(28,22,18,0.72);}
+.home-feats{padding:28px 20px;display:flex;flex-direction:column;gap:18px;}
+.home-feat{border:1px solid var(--rule);background:var(--card);padding:18px;}
+.home-feat-num{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
+.home-feat-title{font-family:var(--serif);font-style:italic;font-weight:400;font-size:22px;letter-spacing:-0.01em;color:var(--ink);margin-bottom:6px;}
+.home-feat-body{font-family:var(--serif);font-weight:300;font-size:14px;line-height:1.55;color:var(--ink-2);}
+.section{padding:24px 20px 16px;border-bottom:1px solid var(--rule);}
+.section-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+.section-eyebrow .num{color:var(--accent);}
+.section-title{font-family:var(--serif);font-weight:300;font-style:italic;font-size:28px;line-height:1.05;letter-spacing:-0.02em;color:var(--ink);font-variation-settings:"opsz" 96;margin-bottom:6px;}
+.section-deck{font-family:var(--serif);font-weight:300;font-size:13px;color:var(--ink-2);}
+.pal-sticky{position:sticky;top:67px;z-index:30;background:var(--card);border-bottom:1px solid var(--rule-2);padding:14px 20px;}
+.pal-preview{display:grid;grid-template-columns:repeat(4,1fr);height:64px;border:1px solid var(--rule-2);}
+.pal-slot{background:var(--paper-2);position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:5px 6px;}
+.pal-slot+.pal-slot{border-left:1px solid rgba(255,255,255,0.2);}
+.pal-slot-num{position:absolute;top:5px;left:6px;font-family:var(--mono);font-size:8px;letter-spacing:0.1em;}
+.pal-slot.empty .pal-slot-num{color:var(--ink-3);}
+.pal-slot:not(.empty).dark .pal-slot-num,.pal-slot:not(.empty).dark .pal-slot-hex{color:rgba(255,255,255,0.88);}
+.pal-slot:not(.empty).light .pal-slot-num,.pal-slot:not(.empty).light .pal-slot-hex{color:rgba(28,22,18,0.78);}
+.pal-slot-hex{font-family:var(--mono);font-size:8px;letter-spacing:0.04em;display:none;}
+.pal-slot:not(.empty) .pal-slot-hex{display:block;}
+.pal-meta{display:flex;align-items:center;justify-content:space-between;margin-top:10px;gap:6px;flex-wrap:wrap;}
+.pal-count{font-family:var(--serif);font-weight:300;font-style:italic;font-size:13px;color:var(--ink-2);}
+.pal-count strong{font-style:normal;font-weight:500;color:var(--ink);}
+.pal-actions{display:flex;gap:6px;}
+.pal-action{background:none;border:1px solid var(--rule-2);padding:7px 10px;font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-2);cursor:pointer;}
+.pal-action:active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.pal-action:disabled{opacity:0.35;}
+.pal-action.primary{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.pal-action.primary:active{background:var(--accent);border-color:var(--accent);}
+.families{padding:8px 20px 20px;}
+.family-row{padding:14px 0;border-bottom:1px solid var(--rule);}
+.family-row:last-child{border-bottom:none;}
+.family-name{font-family:var(--serif);font-style:italic;font-weight:400;font-size:16px;color:var(--ink);text-transform:capitalize;letter-spacing:-0.005em;margin-bottom:2px;}
+.family-meta-num{font-family:var(--mono);font-size:8px;letter-spacing:0.16em;color:var(--ink-3);text-transform:uppercase;margin-bottom:10px;}
+.shades-row{display:grid;grid-template-columns:repeat(15,1fr);gap:2px;}
+.swatch{aspect-ratio:1;cursor:pointer;position:relative;transition:transform .14s cubic-bezier(.34,1.56,.64,1),opacity .2s,outline-color .15s;outline:0 solid transparent;outline-offset:2px;border-radius:2px;min-height:22px;}
+.swatch.compatible{outline:1.5px solid var(--green);outline-offset:1px;}
+.swatch.selected{outline:2px solid var(--ink);outline-offset:1px;transform:scale(1.18);z-index:4;box-shadow:0 4px 10px rgba(28,22,18,0.22);}
+.swatch.incompatible{opacity:0.16;pointer-events:none;}
+.swatch.full:not(.selected){opacity:0.32;pointer-events:none;}
+.chips-area{padding:0 20px 20px;display:flex;flex-direction:column;gap:6px;}
+.chip{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--card);border:1px solid var(--rule);}
+.chip-color{width:28px;height:28px;flex-shrink:0;border:1px solid rgba(28,22,18,0.18);}
+.chip-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;}
+.chip-family{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink);text-transform:capitalize;letter-spacing:-0.005em;}
+.chip-hex{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:0.08em;}
+.chip-rm{background:none;border:none;color:var(--ink-3);width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:22px;line-height:1;cursor:pointer;}
+.chip-rm:active{color:var(--accent);}
+.outfit-figure-wrap{background:var(--card);border-bottom:1px solid var(--rule-2);padding:20px 20px 10px;display:flex;justify-content:center;position:sticky;top:67px;z-index:30;}
+.outfit-figure-wrap svg{width:auto;height:260px;display:block;filter:drop-shadow(0 10px 18px rgba(28,22,18,0.10));}
+.gender-toggle{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--rule-2);margin:14px 20px 0;}
+.gtbtn{padding:10px 8px;background:none;border:none;cursor:pointer;font-family:var(--sans);font-size:10px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;justify-content:center;gap:6px;}
+.gtbtn+.gtbtn{border-left:1px solid var(--rule-2);}
+.gtbtn.active{background:var(--ink);color:var(--paper);}
+.garment-rail{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:14px 20px;}
+.garment-btn{background:none;border:1px solid var(--rule);padding:10px 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;}
+.garment-btn::before{content:"";position:absolute;left:-1px;right:-1px;top:-1px;height:3px;background:transparent;}
+.garment-btn.active{background:var(--card);border-color:var(--ink);}
+.garment-btn.active::before{background:var(--accent);}
+.garment-icon{width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:var(--ink-2);}
+.garment-icon svg{width:100%;height:100%;}
+.garment-title{font-family:var(--serif);font-style:italic;font-size:12px;color:var(--ink);}
+.garment-swatch{width:18px;height:18px;border:1px solid var(--rule-2);background:var(--paper-2);}
+.outfit-prompt{font-family:var(--serif);font-weight:300;font-style:italic;font-size:16px;color:var(--ink-2);padding:12px 20px 6px;}
+.outfit-prompt strong{font-weight:500;font-style:normal;color:var(--ink);}
+.outfit-families{padding:8px 20px 20px;}
+.outfit-family-row{padding:10px 0;border-bottom:1px solid var(--rule);}
+.outfit-family-name{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--ink-2);text-transform:capitalize;margin-bottom:6px;}
+.outfit-shades{display:grid;grid-template-columns:repeat(15,1fr);gap:2px;}
+.oswatch{aspect-ratio:1;cursor:pointer;position:relative;transition:transform .12s cubic-bezier(.34,1.56,.64,1),opacity .2s;outline:0 solid transparent;outline-offset:1px;border-radius:1px;min-height:20px;}
+.oswatch.ocompat{outline:1.5px solid var(--green);}
+.oswatch.oselected{outline:2px solid var(--ink);transform:scale(1.2);z-index:4;box-shadow:0 4px 10px rgba(28,22,18,0.22);}
+.oswatch.oincompat{opacity:0.16;pointer-events:none;}
+.harmony-card{margin:16px 20px;border:1px solid var(--rule);padding:14px;background:var(--card);}
+.harmony-label{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px;}
+.harmony-score{display:flex;align-items:baseline;gap:6px;}
+.harmony-score-num{font-family:var(--serif);font-weight:300;font-size:30px;line-height:1;color:var(--ink);font-variation-settings:"opsz" 144;}
+.harmony-score-of{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:0.1em;}
+.harmony-bar{height:3px;background:var(--paper-2);margin:8px 0 10px;overflow:hidden;}
+.harmony-bar-fill{height:100%;background:var(--ink);transition:width .4s,background .4s;width:0;}
+.harmony-text{font-family:var(--serif);font-style:italic;font-weight:300;font-size:12px;line-height:1.5;color:var(--ink-2);}
+.outfit-actions{padding:0 20px 20px;display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.btn-outline{background:none;border:1px solid var(--rule-2);padding:12px;font-family:var(--sans);font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-2);cursor:pointer;}
+.btn-outline:active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.btn-fill{background:var(--ink);border:1px solid var(--ink);padding:12px;font-family:var(--sans);font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--paper);cursor:pointer;}
+.btn-fill:active{background:var(--accent);border-color:var(--accent);}
+.library{padding:8px 20px 20px;display:flex;flex-direction:column;gap:14px;}
+.lib-card{background:var(--card);border:1px solid var(--rule);}
+.lib-card-head{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--rule);}
+.lib-card-name{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;margin-right:10px;}
+.lib-card-date{font-family:var(--mono);font-size:9px;letter-spacing:0.12em;color:var(--ink-3);flex-shrink:0;}
+.lib-card-strip{display:grid;grid-template-columns:repeat(4,1fr);height:80px;}
+.lib-card-cell{display:flex;align-items:flex-end;padding:5px 6px;}
+.lib-card-cell .h{font-family:var(--mono);font-size:8px;letter-spacing:0.04em;}
+.lib-card-cell.dark .h{color:rgba(255,255,255,0.88);}
+.lib-card-cell.light .h{color:rgba(28,22,18,0.65);}
+.lib-card-foot{padding:8px 14px;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10px;letter-spacing:0.08em;color:var(--ink-3);}
+.lib-card-foot button{background:none;border:none;cursor:pointer;font:inherit;color:var(--ink-2);padding:6px 4px;letter-spacing:0.16em;text-transform:uppercase;font-size:9px;}
+.lib-card-foot button:active{color:var(--accent);}
+.lib-empty{border:1px dashed var(--rule-2);padding:48px 20px;text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;}
+.lib-empty-title{font-family:var(--serif);font-style:italic;font-weight:300;font-size:22px;color:var(--ink-2);font-variation-settings:"opsz" 96;}
+.lib-empty-body{font-family:var(--serif);font-weight:300;font-size:13px;color:var(--ink-3);line-height:1.55;}
+.about{padding:28px 20px 40px;}
+.about-title{font-family:var(--serif);font-weight:300;font-style:italic;font-size:38px;line-height:0.98;letter-spacing:-0.025em;color:var(--ink);margin-bottom:20px;font-variation-settings:"opsz" 144;}
+.about-deck{font-family:var(--serif);font-weight:300;font-size:15px;line-height:1.6;color:var(--ink-2);margin-bottom:24px;}
+.about-h{font-family:var(--serif);font-style:italic;font-weight:400;font-size:20px;color:var(--ink);margin:24px 0 10px;letter-spacing:-0.01em;}
+.about-p{font-size:13.5px;line-height:1.65;color:var(--ink-2);margin-bottom:10px;}
+.about-list{margin:0 0 14px 20px;color:var(--ink-2);}
+.about-list li{margin-bottom:6px;line-height:1.6;font-size:13.5px;}
+.about-stats{border-top:1px solid var(--rule);margin:20px 0;list-style:none;}
+.about-stats li{padding:9px 0;border-bottom:1px solid var(--rule);display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--ink);}
+.tabbar{position:fixed;left:0;right:0;bottom:0;height:calc(var(--tabbar) + var(--safe-bot));padding-bottom:var(--safe-bot);background:var(--paper);border-top:1px solid var(--rule-2);display:grid;grid-template-columns:repeat(5,1fr);z-index:50;}
+.tab{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--ink-3);font-family:var(--mono);font-size:8.5px;letter-spacing:0.1em;text-transform:uppercase;position:relative;}
+.tab svg{width:20px;height:20px;}
+.tab.active{color:var(--ink);}
+.tab.active::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:24px;height:2px;background:var(--accent);}
+.toast{position:fixed;bottom:calc(var(--tabbar) + var(--safe-bot) + 16px);left:50%;transform:translateX(-50%) translateY(12px);background:var(--ink);color:var(--paper);padding:10px 20px;font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;opacity:0;transition:opacity .22s,transform .22s;pointer-events:none;z-index:999;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.modal-back{position:fixed;inset:0;background:rgba(28,22,18,0.45);display:none;align-items:flex-end;justify-content:center;z-index:200;}
+.modal-back.show{display:flex;}
+.modal{background:var(--paper);width:100%;padding:24px 20px calc(24px + var(--safe-bot));border-top-left-radius:14px;border-top-right-radius:14px;max-width:480px;}
+.modal::before{content:"";display:block;width:36px;height:4px;background:var(--rule-2);border-radius:2px;margin:0 auto 16px;}
+.modal h3{font-family:var(--serif);font-style:italic;font-weight:300;font-size:24px;letter-spacing:-0.015em;color:var(--ink);margin-bottom:6px;font-variation-settings:"opsz" 96;}
+.modal p{font-family:var(--serif);font-weight:300;font-size:13.5px;color:var(--ink-2);margin-bottom:16px;}
+.modal input{width:100%;padding:12px 14px;border:1px solid var(--rule-2);background:var(--card);font-family:var(--serif);font-style:italic;font-size:16px;color:var(--ink);outline:none;}
+.modal input:focus{border-color:var(--ink);}
+.modal-actions{display:flex;gap:8px;margin-top:16px;}
+.modal-actions button{flex:1;padding:12px;}
+.sheet-menu{background:var(--paper);border-top:1px solid var(--rule-2);padding:16px 20px calc(16px + var(--safe-bot));border-top-left-radius:14px;border-top-right-radius:14px;width:100%;max-width:480px;}
+.sheet-menu::before{content:"";display:block;width:36px;height:4px;background:var(--rule-2);border-radius:2px;margin:0 auto 14px;}
+.sheet-menu h4{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-3);margin-bottom:12px;}
+.sheet-menu button{display:block;width:100%;text-align:left;padding:14px 12px;background:none;border:none;border-bottom:1px solid var(--rule);font-family:var(--serif);font-style:italic;font-size:16px;color:var(--ink);cursor:pointer;}
+.sheet-menu button:last-of-type{border-bottom:none;}
+.sheet-menu button:active{background:var(--card);}
+@media (max-width:360px){
+  .hero-headline{font-size:40px;}
+  .swatch,.oswatch{min-height:18px;}
+}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="brand-mark">Tonal</div>
+  <div class="brand-sub">Studio · v1.0</div>
+</header>
+
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-issue">A field guide to colors that belong together</div>
+    <h1 class="hero-headline">Find combinations that <em>sing,</em> not shout.</h1>
+    <p class="hero-deck">Twelve families. Fifteen shades each. A harmony engine that quietly dims the tones that don't belong — so you only ever choose from what works.</p>
+    <button class="hero-cta" onclick="goPage('palette')">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+      Open the builder
+    </button>
+  </section>
+  <div class="hero-ribbon" id="hero-ribbon"></div>
+  <div class="home-feats">
+    <div class="home-feat"><div class="home-feat-num">01 · Palette Builder</div><div class="home-feat-title">Compose a four-tone chord.</div><div class="home-feat-body">Pick a shade. The engine dims everything that wouldn't sit beside it. Add up to four tones, copy the hex codes, save the palette.</div></div>
+    <div class="home-feat"><div class="home-feat-num">02 · Outfit Visualizer</div><div class="home-feat-title">Dress a figure in your palette.</div><div class="home-feat-body">Choose between two figures and assign tones to coat, top, trousers, and shoes. Read the harmony score before you commit.</div></div>
+    <div class="home-feat"><div class="home-feat-num">03 · Library</div><div class="home-feat-title">Keep what you trust.</div><div class="home-feat-body">Save combinations to your device. Reload them into the builder anytime — everything stays local, nothing leaves your phone.</div></div>
+  </div>
+</div>
+
+<div class="page" id="page-palette">
+  <div class="section">
+    <div class="section-eyebrow"><span class="num">01</span> Palette Builder</div>
+    <h2 class="section-title">Compose a four-tone chord</h2>
+    <p class="section-deck">Pick any shade. Compatible tones glow green; the rest dim quietly.</p>
+  </div>
+  <div class="pal-sticky">
+    <div class="pal-preview">
+      <div class="pal-slot empty" id="ps0"><span class="pal-slot-num">01</span><span class="pal-slot-hex"></span></div>
+      <div class="pal-slot empty" id="ps1"><span class="pal-slot-num">02</span><span class="pal-slot-hex"></span></div>
+      <div class="pal-slot empty" id="ps2"><span class="pal-slot-num">03</span><span class="pal-slot-hex"></span></div>
+      <div class="pal-slot empty" id="ps3"><span class="pal-slot-num">04</span><span class="pal-slot-hex"></span></div>
+    </div>
+    <div class="pal-meta">
+      <div class="pal-count"><strong id="sel-count">0</strong> of 4 tones</div>
+      <div class="pal-actions">
+        <button class="pal-action" id="reset-btn" onclick="resetPalette()" disabled>Reset</button>
+        <button class="pal-action" id="copy-btn" onclick="copyHex()" disabled>Copy</button>
+        <button class="pal-action primary" id="save-btn" onclick="openSaveModal()" disabled>Save</button>
+        <button class="pal-action" id="export-btn" onclick="openExportSheet()" disabled>Export</button>
+      </div>
+    </div>
+  </div>
+  <div class="chips-area" id="chips-area"></div>
+  <div class="families" id="families-container"></div>
+</div>
+
+<div class="page" id="page-outfit">
+  <div class="section">
+    <div class="section-eyebrow"><span class="num">02</span> Outfit Visualizer</div>
+    <h2 class="section-title">Dress a figure</h2>
+    <p class="section-deck">Pick a garment, then choose a tone. The engine keeps the harmony.</p>
+  </div>
+  <div class="outfit-figure-wrap" id="outfit-figure-wrap"></div>
+  <div class="gender-toggle">
+    <button class="gtbtn active" id="gtbtn-man" onclick="setGender('man')">Figure A</button>
+    <button class="gtbtn" id="gtbtn-woman" onclick="setGender('woman')">Figure B</button>
+  </div>
+  <div class="garment-rail" id="garment-rail"></div>
+  <p class="outfit-prompt" id="outfit-prompt">Choose a tone for the <strong>coat</strong></p>
+  <div class="outfit-families" id="outfit-families"></div>
+  <div class="harmony-card">
+    <div class="harmony-label">Harmony reading</div>
+    <div class="harmony-score">
+      <span class="harmony-score-num" id="harm-num">—</span>
+      <span class="harmony-score-of" id="harm-of">/ 1.00</span>
+    </div>
+    <div class="harmony-bar"><div class="harmony-bar-fill" id="harm-bar"></div></div>
+    <div class="harmony-text" id="harm-text">Begin by choosing a tone for any garment.</div>
+  </div>
+  <div class="outfit-actions">
+    <button class="btn-outline" onclick="resetOutfit()">Reset</button>
+    <button class="btn-fill" onclick="saveOutfitAsPalette()">Save as palette</button>
+  </div>
+</div>
+
+<div class="page" id="page-library">
+  <div class="section">
+    <div class="section-eyebrow"><span class="num">03</span> <span id="library-count">0 palettes</span></div>
+    <h2 class="section-title">Library</h2>
+    <p class="section-deck">Saved combinations live on your device. Nothing leaves this phone.</p>
+  </div>
+  <div class="library" id="library-grid"></div>
+</div>
+
+<div class="page" id="page-about">
+  <div class="about">
+    <h1 class="about-title">A small tool<br>for thinking in color.</h1>
+    <p class="about-deck">Tonal is a quiet studio for picking color combinations that don't fight each other. No accounts, no uploads, no tracking — everything you build stays on this device.</p>
+    <h2 class="about-h">How the harmony engine works</h2>
+    <p class="about-p">Every shade belongs to one of twelve families. Each pair of families carries a harmony score between 0 and 1, hand-tuned from classical color theory — complementary, analogous, split-complementary, triadic, and the warm-neutral pairings that make everything cohere.</p>
+    <p class="about-p">When you pick a tone, the engine checks every other shade and dims anything below a 0.62 threshold. Within the same family, it requires at least four shade-steps of contrast, so your palette doesn't read as a near-monochrome.</p>
+    <h2 class="about-h">What it's for</h2>
+    <ul class="about-list">
+      <li>Putting together palettes for design, web, or interior projects.</li>
+      <li>Trying outfits before reaching for the closet.</li>
+      <li>Learning color relationships without the math.</li>
+      <li>Keeping a personal library of combinations you trust.</li>
+    </ul>
+    <h2 class="about-h">By the numbers</h2>
+    <ul class="about-stats">
+      <li><span>Families</span><span>12</span></li>
+      <li><span>Shades / family</span><span>15</span></li>
+      <li><span>Total tones</span><span>180</span></li>
+      <li><span>Harmony pairs</span><span>66</span></li>
+    </ul>
+    <h2 class="about-h">Privacy</h2>
+    <p class="about-p">Saved palettes live only in your phone's local storage. Tonal doesn't transmit your selections, store accounts, or sell data. If you'd like Tonal removed, simply uninstall the app — everything goes with it.</p>
+  </div>
+</div>
+
+<nav class="tabbar">
+  <button class="tab active" data-page="home" onclick="goPage('home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 11l8-7 8 7v9a1 1 0 01-1 1h-4v-7h-6v7H5a1 1 0 01-1-1v-9z"/></svg>
+    Home
+  </button>
+  <button class="tab" data-page="palette" onclick="goPage('palette')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><circle cx="8" cy="9" r="1.5" fill="currentColor"/><circle cx="15" cy="8" r="1.5" fill="currentColor"/><circle cx="16" cy="14" r="1.5" fill="currentColor"/></svg>
+    Palette
+  </button>
+  <button class="tab" data-page="outfit" onclick="goPage('outfit')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 4l4 2 4-2 4 4-3 2v10H7V10L4 8l4-4z"/></svg>
+    Outfit
+  </button>
+  <button class="tab" data-page="library" onclick="goPage('library')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 4h4v16H5zM10 4h4v16h-4zM15 5l3.8 1-3 14.5L12 19z"/></svg>
+    Library
+  </button>
+  <button class="tab" data-page="about" onclick="goPage('about')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M12 11v5"/></svg>
+    About
+  </button>
+</nav>
+
+<div class="toast" id="toast">Copied</div>
+
+<div class="modal-back" id="save-modal">
+  <div class="modal">
+    <h3>Name this palette</h3>
+    <p>A season, a mood, a project — something memorable.</p>
+    <input id="save-name" type="text" placeholder="Untitled palette" maxlength="40"/>
+    <div class="modal-actions">
+      <button class="btn-outline" onclick="closeSaveModal()">Cancel</button>
+      <button class="btn-fill" onclick="confirmSave()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-back" id="export-back" onclick="closeExportSheet(event)">
+  <div class="sheet-menu" onclick="event.stopPropagation()">
+    <h4>Export palette</h4>
+    <button onclick="exportPalettePNG()">Save as PNG</button>
+    <button onclick="exportPaletteSVG()">Save as SVG</button>
+    <button onclick="closeExportSheet()" style="color:var(--ink-3);">Cancel</button>
+  </div>
+</div>
+<script>
+'use strict';
+
+/* ════════════════════════════════════════════
+   DATA — 12 families × 15 shades
+   ════════════════════════════════════════════ */
+const COLOR_FAMILIES = [
+  {name:'red',          shades:['#180202','#2c0404','#420707','#5c0c0c','#921515','#c43030','#e26262','#ea7e7e','#f09a9a','#f5b0b0','#f8c4c4','#fad4d4','#fdeaea','#fef8f8','#fffafa']},
+  {name:'orange',       shades:['#1e0c00','#300e00','#461600','#5e2000','#923e00','#c46c28','#e89c5a','#f0b476','#f5c692','#f8d4aa','#fadfc0','#fbe8d0','#fdf3ea','#fefbf8','#fffdfb']},
+  {name:'yellow',       shades:['#161000','#261c00','#382a00','#4c3800','#7c6200','#b29400','#dcc040','#e8d060','#f0de7e','#f4e898','#f7eeb0','#f9f3c4','#fdf9e4','#fefdf5','#fffefb']},
+  {name:'green',        shades:['#011208','#021c0c','#032814','#04381e','#086234','#0e9452','#24c87a','#42d892','#66e4aa','#88eec0','#a8f4d2','#c0f7e2','#e4fcf4','#f7fefc','#fbfffd']},
+  {name:'teal',         shades:['#001212','#001e1e','#002a2a','#003838','#006060','#009090','#20bcbc','#3cd0d0','#60e0e0','#86ecec','#a8f4f4','#c0f8f8','#e4fcfc','#f6fefe','#fafffe']},
+  {name:'blue',         shades:['#020410','#040a1e','#08122e','#0e1e44','#1c3e74','#2e6aaa','#50a0da','#6ebcee','#90d0f6','#aedcfa','#c4e7fc','#d6effe','#eef8ff','#f9fdff','#fcfeff']},
+  {name:'indigo',       shades:['#060214','#0e0626','#160a3a','#200e52','#3c1e8a','#663ebf','#9878e4','#b098ee','#c8b6f4','#d8ccf8','#e4defb','#eee8fd','#f7f5ff','#fcfaff','#fefcff']},
+  {name:'rose',         shades:['#160406','#260810','#380e1a','#4c1426','#7c2240','#b03c6a','#da6698','#e880ae','#f09cc4','#f5b4d6','#f8c8e4','#fadaee','#fdf0f9','#fefafd','#fffcfe']},
+  {name:'brown',        shades:['#0e0502','#1c0a04','#2c1008','#3e180c','#682e1a','#985036','#c28268','#d29e88','#deb6a4','#e8c8bc','#f0d8ce','#f5e4dc','#faf3f0','#fdfaf8','#fefefd']},
+  {name:'warm-neutral', shades:['#1a1208','#2a1e10','#3c2c18','#503c24','#7e6444','#b09070','#d4bca2','#e0ccb8','#e8d8ca','#f0e4d8','#f4ebe2','#f7f0ea','#fbf7f3','#fefcf9','#fffefb']},
+  {name:'taupe',        shades:['#0c0c0a','#181614','#252220','#34302e','#565250','#7e7a78','#a8a6a4','#bcbab8','#cccac8','#d8d6d4','#e2e0de','#eae8e6','#f5f3f2','#fbfafa','#fefefe']},
+  {name:'slate',        shades:['#080810','#10101c','#181830','#222240','#3c3c64','#62628e','#9090b8','#a8a8ca','#bdbdd8','#cccce2','#d8d8ec','#e2e2f3','#f0f0fa','#f9f9fe','#fdfdff']},
+];
+
+const HARMONY = (() => {
+  const n=COLOR_FAMILIES.map(f=>f.name),R={};
+  n.forEach(a=>{R[a]={};n.forEach(b=>{R[a][b]=0;});});
+  const lk=(a,b,s)=>{R[a][b]=s;R[b][a]=s;};
+  lk('red','orange',.88);lk('red','rose',.90);lk('red','brown',.75);lk('red','warm-neutral',.72);lk('red','taupe',.70);lk('red','slate',.75);lk('red','indigo',.68);lk('red','blue',.72);lk('red','yellow',.60);
+  lk('orange','yellow',.90);lk('orange','brown',.92);lk('orange','warm-neutral',.88);lk('orange','taupe',.78);lk('orange','blue',.78);lk('orange','slate',.70);lk('orange','green',.62);
+  lk('yellow','green',.80);lk('yellow','teal',.64);lk('yellow','brown',.80);lk('yellow','warm-neutral',.78);lk('yellow','taupe',.72);lk('yellow','slate',.62);
+  lk('green','teal',.92);lk('green','blue',.75);lk('green','indigo',.65);lk('green','taupe',.68);lk('green','slate',.72);lk('green','warm-neutral',.62);
+  lk('teal','blue',.90);lk('teal','indigo',.78);lk('teal','slate',.80);lk('teal','taupe',.64);lk('teal','rose',.64);
+  lk('blue','indigo',.92);lk('blue','slate',.85);lk('blue','taupe',.64);lk('blue','rose',.66);lk('blue','warm-neutral',.62);
+  lk('indigo','rose',.76);lk('indigo','slate',.80);lk('indigo','taupe',.62);
+  lk('rose','red',.90);lk('rose','brown',.72);lk('rose','warm-neutral',.74);lk('rose','taupe',.72);lk('rose','slate',.68);
+  lk('brown','warm-neutral',.94);lk('brown','taupe',.90);lk('brown','slate',.78);lk('brown','orange',.92);
+  lk('warm-neutral','taupe',.94);lk('warm-neutral','slate',.88);lk('warm-neutral','brown',.94);
+  lk('taupe','slate',.92);
+  n.forEach(a=>{R[a][a]=1.0;});
+  return R;
+})();
+
+/* ════════════════════════════════════════════
+   UTILITIES
+   ════════════════════════════════════════════ */
+function getFam(hex){for(const f of COLOR_FAMILIES)if(f.shades.includes(hex))return f.name;return null;}
+function getIdx(hex){for(const f of COLOR_FAMILIES){const i=f.shades.indexOf(hex);if(i!==-1)return i;}return -1;}
+function luminance(hex){
+  const r=parseInt(hex.slice(1,3),16)/255,g=parseInt(hex.slice(3,5),16)/255,b=parseInt(hex.slice(5,7),16)/255;
+  return 0.2126*r+0.7152*g+0.0722*b;
+}
+function isDark(hex){return luminance(hex)<0.55;}
+function darken(hex,a){
+  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  return '#'+[Math.max(0,r-a),Math.max(0,g-a),Math.max(0,b-a)].map(v=>v.toString(16).padStart(2,'0')).join('');
+}
+function fmtDate(ts){
+  const d=new Date(ts);
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return months[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear();
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+/* ════════════════════════════════════════════
+   HERO RIBBON
+   ════════════════════════════════════════════ */
+function buildHeroRibbon(){
+  const el=document.getElementById('hero-ribbon');el.innerHTML='';
+  COLOR_FAMILIES.forEach((f,i)=>{
+    const hex=f.shades[5];
+    const cell=document.createElement('div');
+    cell.className='hero-ribbon-cell '+(isDark(hex)?'dark':'light');
+    cell.style.background=hex;
+    cell.innerHTML='<span class="num">'+String(i+1).padStart(2,'0')+'</span><span class="name">'+f.name.replace('-',' ')+'</span>';
+    el.appendChild(cell);
+  });
+}
+
+/* ════════════════════════════════════════════
+   PAGE NAVIGATION
+   ════════════════════════════════════════════ */
+function goPage(p){
+  document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.page===p));
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+/* ════════════════════════════════════════════
+   PALETTE BUILDER
+   ════════════════════════════════════════════ */
+let palSel=[];
+function isPalCompat(hex){
+  if(palSel.length===0)return true;
+  if(palSel.includes(hex)||palSel.length>=4)return false;
+  const tf=getFam(hex),ti=getIdx(hex);
+  for(const s of palSel){
+    const sf=getFam(s),si=getIdx(s);
+    if(HARMONY[sf][tf]<.62)return false;
+    if(sf===tf&&Math.abs(ti-si)<4)return false;
+  }
+  return true;
+}
+
+function renderPalFamilies(){
+  const c=document.getElementById('families-container');c.innerHTML='';
+  COLOR_FAMILIES.forEach((f,i)=>{
+    const row=document.createElement('div');row.className='family-row';
+    row.innerHTML='<div class="family-name">'+f.name.replace('-',' ')+'</div><div class="family-meta-num">№ '+String(i+1).padStart(2,'0')+' · 15 shades</div>';
+    const sr=document.createElement('div');sr.className='shades-row';
+    f.shades.forEach(hex=>{
+      const sw=document.createElement('div');sw.className='swatch';sw.style.background=hex;
+      sw.setAttribute('aria-label',hex.toUpperCase());
+      if(palSel.includes(hex)){
+        sw.classList.add('selected');
+        sw.onclick=()=>{palSel=palSel.filter(h=>h!==hex);updatePalette();};
+      } else if(palSel.length>=4){
+        sw.classList.add('full');
+      } else if(isPalCompat(hex)){
+        if(palSel.length>0)sw.classList.add('compatible');
+        sw.onclick=()=>{palSel.push(hex);updatePalette();};
+      } else {
+        sw.classList.add('incompatible');
+      }
+      sr.appendChild(sw);
+    });
+    row.appendChild(sr);c.appendChild(row);
+  });
+}
+
+function updatePalette(){
+  renderPalFamilies();
+  for(let i=0;i<4;i++){
+    const slot=document.getElementById('ps'+i),hexEl=slot.querySelector('.pal-slot-hex');
+    if(palSel[i]){
+      slot.style.background=palSel[i];
+      slot.classList.remove('empty');
+      slot.classList.toggle('dark',isDark(palSel[i]));
+      slot.classList.toggle('light',!isDark(palSel[i]));
+      hexEl.textContent=palSel[i].toUpperCase();
+    } else {
+      slot.style.background='';slot.classList.add('empty');
+      slot.classList.remove('dark','light');
+      hexEl.textContent='';
+    }
+  }
+  const area=document.getElementById('chips-area');area.innerHTML='';
+  palSel.forEach(hex=>{
+    const chip=document.createElement('div');chip.className='chip';
+    chip.innerHTML='<div class="chip-color" style="background:'+hex+'"></div><div class="chip-info"><div class="chip-family">'+getFam(hex).replace('-',' ')+'</div><div class="chip-hex">'+hex.toUpperCase()+'</div></div>';
+    const rm=document.createElement('button');rm.className='chip-rm';rm.innerHTML='&times;';
+    rm.onclick=()=>{palSel=palSel.filter(x=>x!==hex);updatePalette();};
+    chip.appendChild(rm);
+    area.appendChild(chip);
+  });
+  document.getElementById('sel-count').textContent=palSel.length;
+  const has=palSel.length>0;
+  document.getElementById('reset-btn').disabled=!has;
+  document.getElementById('copy-btn').disabled=!has;
+  document.getElementById('save-btn').disabled=!has;
+  document.getElementById('export-btn').disabled=!has;
+}
+function resetPalette(){palSel=[];updatePalette();}
+
+function copyHex(){
+  const t=palSel.map(h=>h.toUpperCase()).join('  ·  ');
+  // navigator.clipboard may not work in WebView with file:// — fallback to legacy
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(()=>showToast('Hex codes copied'),()=>fallbackCopy(t));
+  } else {
+    fallbackCopy(t);
+  }
+}
+function fallbackCopy(text){
+  const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');showToast('Hex codes copied');}
+  catch(e){showToast('Copy failed');}
+  document.body.removeChild(ta);
+}
+
+/* ════════════════════════════════════════════
+   EXPORT — PNG and SVG (saved via Android bridge or data URL)
+   ════════════════════════════════════════════ */
+function buildPaletteSVGString(palette){
+  const W=800,H=800,padding=64,headerH=140,footerH=120,stripH=H-headerH-footerH-padding;
+  const swatchH=stripH;
+  const swatchW=(W-padding*2)/palette.length;
+  let svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
+  svg+='<rect width="'+W+'" height="'+H+'" fill="#f1ebdd"/>';
+  svg+='<line x1="'+padding+'" y1="'+(headerH-32)+'" x2="'+(W-padding)+'" y2="'+(headerH-32)+'" stroke="#1c1612" stroke-width="1" opacity=".18"/>';
+  svg+='<text x="'+padding+'" y="'+(headerH-50)+'" font-family="JetBrains Mono, monospace" font-size="13" letter-spacing="2.4" fill="#9a8b76">TONAL · PALETTE</text>';
+  svg+='<text x="'+padding+'" y="'+(headerH+14)+'" font-family="Fraunces, Georgia, serif" font-style="italic" font-weight="300" font-size="56" fill="#1c1612">A four-tone composition</text>';
+  palette.forEach((hex,i)=>{
+    const x=padding+i*swatchW,y=headerH+32;
+    svg+='<rect x="'+x+'" y="'+y+'" width="'+(swatchW-4)+'" height="'+(swatchH-50)+'" fill="'+hex+'"/>';
+    const dark=luminance(hex)<0.55;
+    const labelColor=dark?'rgba(255,255,255,0.88)':'rgba(28,22,18,0.78)';
+    svg+='<text x="'+(x+14)+'" y="'+(y+24)+'" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="1.4" fill="'+labelColor+'">'+String(i+1).padStart(2,'0')+'</text>';
+    svg+='<text x="'+(x+14)+'" y="'+(y+swatchH-66)+'" font-family="JetBrains Mono, monospace" font-size="14" font-weight="500" fill="'+labelColor+'">'+hex.toUpperCase()+'</text>';
+    svg+='<text x="'+(x+14)+'" y="'+(y+swatchH-50)+'" font-family="Fraunces, Georgia, serif" font-style="italic" font-size="14" fill="'+labelColor+'">'+getFam(hex).replace('-',' ')+'</text>';
+  });
+  svg+='<line x1="'+padding+'" y1="'+(H-footerH+24)+'" x2="'+(W-padding)+'" y2="'+(H-footerH+24)+'" stroke="#1c1612" stroke-width="1" opacity=".18"/>';
+  svg+='<text x="'+padding+'" y="'+(H-padding-12)+'" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2.4" fill="#9a8b76">TONAL.STUDIO</text>';
+  svg+='</svg>';
+  return svg;
+}
+
+function savePaletteFile(filename, content, mime){
+  // If Android bridge is available, use it to write directly to Downloads/Pictures
+  if(window.Android && typeof window.Android.saveFile === 'function'){
+    try {
+      window.Android.saveFile(filename, content, mime);
+      return true;
+    } catch(e){ /* fall through */ }
+  }
+  // Fallback: data URI download (works in modern WebViews)
+  const blob = new Blob([content], {type: mime});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  return false;
+}
+
+function exportPaletteSVG(){
+  closeExportSheet();
+  if(palSel.length===0)return;
+  const svg=buildPaletteSVGString(palSel);
+  const used = savePaletteFile('tonal-palette.svg', svg, 'image/svg+xml');
+  showToast(used?'Saved to Downloads':'SVG ready');
+}
+
+function exportPalettePNG(){
+  closeExportSheet();
+  if(palSel.length===0)return;
+  const svgStr=buildPaletteSVGString(palSel);
+  const blob=new Blob([svgStr],{type:'image/svg+xml;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const img=new Image();
+  img.onload=()=>{
+    const scale=2;
+    const c=document.createElement('canvas');c.width=800*scale;c.height=800*scale;
+    const ctx=c.getContext('2d');ctx.scale(scale,scale);ctx.drawImage(img,0,0);
+    c.toBlob(b=>{
+      // Read as base64 and pass to Android
+      if(window.Android && typeof window.Android.savePng === 'function'){
+        const reader=new FileReader();
+        reader.onload=()=>{
+          const dataUrl=reader.result;
+          const base64=dataUrl.split(',')[1];
+          try{window.Android.savePng('tonal-palette.png',base64);showToast('Saved to Pictures');}
+          catch(e){showToast('Save failed');}
+        };
+        reader.readAsDataURL(b);
+      } else {
+        const u=URL.createObjectURL(b);
+        const a=document.createElement('a');a.href=u;a.download='tonal-palette.png';
+        document.body.appendChild(a);a.click();a.remove();
+        setTimeout(()=>URL.revokeObjectURL(u),1000);
+        showToast('PNG ready');
+      }
+    },'image/png');
+    URL.revokeObjectURL(url);
+  };
+  img.onerror=()=>{showToast('Export failed');URL.revokeObjectURL(url);};
+  img.src=url;
+}
+
+function openExportSheet(){
+  if(palSel.length===0)return;
+  document.getElementById('export-back').classList.add('show');
+}
+function closeExportSheet(evt){
+  if(evt && evt.target.closest('.sheet-menu') && evt.type==='click') return;
+  document.getElementById('export-back').classList.remove('show');
+}
+
+/* ════════════════════════════════════════════
+   LIBRARY (localStorage)
+   ════════════════════════════════════════════ */
+const LIB_KEY='tonal.library.v1';
+function loadLibrary(){try{return JSON.parse(localStorage.getItem(LIB_KEY)||'[]');}catch(e){return[];}}
+function saveLibrary(arr){localStorage.setItem(LIB_KEY,JSON.stringify(arr));renderLibrary();}
+
+function openSaveModal(){
+  if(palSel.length===0)return;
+  const m=document.getElementById('save-modal');m.classList.add('show');
+  setTimeout(()=>document.getElementById('save-name').focus(),50);
+}
+function closeSaveModal(){document.getElementById('save-modal').classList.remove('show');document.getElementById('save-name').value='';}
+function confirmSave(){
+  const name=(document.getElementById('save-name').value||'').trim()||'Untitled palette';
+  const lib=loadLibrary();
+  lib.unshift({id:Date.now(),name:name,colors:palSel.slice(),created:Date.now()});
+  saveLibrary(lib);
+  closeSaveModal();
+  showToast('Saved to library');
+}
+
+function deletePalette(id){
+  if(!confirm('Delete this palette?'))return;
+  const lib=loadLibrary().filter(p=>p.id!==id);
+  saveLibrary(lib);
+  showToast('Removed');
+}
+function loadPaletteIntoBuilder(id){
+  const p=loadLibrary().find(x=>x.id===id);if(!p)return;
+  palSel=p.colors.slice();updatePalette();
+  goPage('palette');
+  showToast('Loaded');
+}
+
+function renderLibrary(){
+  const grid=document.getElementById('library-grid');
+  const lib=loadLibrary();
+  document.getElementById('library-count').textContent=lib.length+' palette'+(lib.length===1?'':'s');
+  grid.innerHTML='';
+  if(lib.length===0){
+    grid.innerHTML='<div class="lib-empty"><div class="lib-empty-title">No palettes saved yet.</div><p class="lib-empty-body">Build a palette in the studio and tap Save to keep it here. Everything stays on your device.</p><button class="btn-fill" style="margin-top:12px;" onclick="goPage(&quot;palette&quot;)">Open the builder</button></div>';
+    return;
+  }
+  lib.forEach(p=>{
+    const card=document.createElement('div');card.className='lib-card';
+    let strip='';
+    p.colors.forEach(hex=>{
+      const dark=isDark(hex);
+      strip+='<div class="lib-card-cell '+(dark?'dark':'light')+'" style="background:'+hex+'"><span class="h">'+hex.toUpperCase()+'</span></div>';
+    });
+    for(let i=p.colors.length;i<4;i++){
+      strip+='<div class="lib-card-cell light" style="background:var(--paper-2)"><span class="h"></span></div>';
+    }
+    card.innerHTML='<div class="lib-card-head"><div class="lib-card-name">'+escapeHtml(p.name)+'</div><div class="lib-card-date">'+fmtDate(p.created)+'</div></div>'
+      +'<div class="lib-card-strip">'+strip+'</div>'
+      +'<div class="lib-card-foot"><span>'+p.colors.length+' tones</span><span><button onclick="loadPaletteIntoBuilder('+p.id+')">Open</button><button onclick="deletePalette('+p.id+')">Delete</button></span></div>';
+    grid.appendChild(card);
+  });
+}
+
+/* ════════════════════════════════════════════
+   OUTFIT VISUALIZER
+   ════════════════════════════════════════════ */
+const SVG_MAN = '<svg id="svg-man" width="280" height="500" viewBox="0 0 280 500" xmlns="http://www.w3.org/2000/svg">\n              <defs>\n                <linearGradient id="skin-m" x1="0" x2="0" y1="0" y2="1">\n                  <stop offset="0%" stop-color="#e8c8a8"/>\n                  <stop offset="100%" stop-color="#d4a98a"/>\n                </linearGradient>\n              </defs>\n              <!-- HEAD: small, stylized ovoid; no face details -->\n              <ellipse cx="140" cy="46" rx="20" ry="26" fill="url(#skin-m)"/>\n              <!-- subtle hair indication -->\n              <path d="M120 36 Q124 22 140 22 Q156 22 160 36 Q160 30 156 28 L124 28 Q120 30 120 36 Z" fill="#2a1c12" opacity=".88"/>\n\n              <!-- NECK (thin) -->\n              <rect x="133" y="68" width="14" height="14" fill="url(#skin-m)"/>\n\n              <!-- ═══ SHIRT — drawn first, full torso, narrow ═══ -->\n              <!-- High-fashion silhouette: narrow shoulders, long lean torso -->\n              <path id="m-shirt-body"\n                d="M118 80 L106 96 L100 200 L106 280 L174 280 L180 200 L174 96 L162 80 L150 92 L130 92 Z"\n                fill="#efe6d6" stroke="#d8cfbf" stroke-width="1"/>\n              <path id="m-shirt-collar"\n                d="M122 80 L140 100 L158 80 L158 90 L140 110 L122 90 Z"\n                fill="#e2d9c8" stroke="#cabfae" stroke-width=".8"/>\n              <path id="m-shirt-sleeve-l"\n                d="M118 80 L100 100 L88 200 L94 240 L104 240 L106 200 L114 100 Z"\n                fill="#efe6d6" stroke="#d8cfbf" stroke-width="1"/>\n              <path id="m-shirt-sleeve-r"\n                d="M162 80 L180 100 L192 200 L186 240 L176 240 L174 200 L166 100 Z"\n                fill="#efe6d6" stroke="#d8cfbf" stroke-width="1"/>\n\n              <!-- ═══ COAT — long, structured, two front panels open at center ═══ -->\n              <path id="m-coat-l"\n                d="M118 80\n                   L96 100\n                   L82 168\n                   L78 230\n                   L80 295\n                   L88 320\n                   L116 320\n                   L116 235\n                   L120 168\n                   L126 110\n                   Z"\n                fill="#b8ad99" stroke="#988d79" stroke-width="1"/>\n              <path id="m-coat-r"\n                d="M162 80\n                   L184 100\n                   L198 168\n                   L202 230\n                   L200 295\n                   L192 320\n                   L164 320\n                   L164 235\n                   L160 168\n                   L154 110\n                   Z"\n                fill="#b8ad99" stroke="#988d79" stroke-width="1"/>\n              <path id="m-coat-lapel-l"\n                d="M140 80 L126 110 L120 168 L130 152 L140 122 Z"\n                fill="#a89d89" stroke="#8a7f6d" stroke-width=".8"/>\n              <path id="m-coat-lapel-r"\n                d="M140 80 L154 110 L160 168 L150 152 L140 122 Z"\n                fill="#a89d89" stroke="#8a7f6d" stroke-width=".8"/>\n              <path id="m-coat-collar"\n                d="M118 78 L140 70 L162 78 L156 110 L140 100 L124 110 Z"\n                fill="#b8ad99" stroke="#988d79" stroke-width=".8"/>\n              <path id="m-coat-sleeve-l"\n                d="M118 80 L96 100 L80 168 L74 240 L92 244 L96 168 L114 105 Z"\n                fill="#b8ad99" stroke="#988d79" stroke-width="1"/>\n              <path id="m-coat-sleeve-r"\n                d="M162 80 L184 100 L200 168 L206 240 L188 244 L184 168 L166 105 Z"\n                fill="#b8ad99" stroke="#988d79" stroke-width="1"/>\n              <!-- subtle buttons -->\n              <circle cx="124" cy="200" r="2" fill="#5a503e" opacity=".5"/>\n              <circle cx="124" cy="222" r="2" fill="#5a503e" opacity=".5"/>\n              <circle cx="124" cy="244" r="2" fill="#5a503e" opacity=".5"/>\n\n              <!-- HANDS -->\n              <ellipse cx="83" cy="246" rx="9" ry="11" fill="url(#skin-m)"/>\n              <ellipse cx="197" cy="246" rx="9" ry="11" fill="url(#skin-m)"/>\n\n              <!-- ═══ PANTS — narrow, slightly tapered ═══ -->\n              <path id="m-pants-l"\n                d="M108 318 L100 432 L122 432 L138 322 L138 318 Z"\n                fill="#3a4250" stroke="#262b34" stroke-width="1"/>\n              <path id="m-pants-r"\n                d="M172 318 L180 432 L158 432 L142 322 L142 318 Z"\n                fill="#3a4250" stroke="#262b34" stroke-width="1"/>\n              <rect id="m-pants-waist" x="108" y="312" width="64" height="9" fill="#2c333e" stroke="#262b34" stroke-width=".8"/>\n\n              <!-- ═══ SHOES — sleek, oxford-shape ═══ -->\n              <path id="m-shoe-body-l"\n                d="M93 432 Q88 444 96 458 L128 458 L128 432 Z"\n                fill="#1c1410" stroke="#0e0a08" stroke-width="1"/>\n              <rect id="m-shoe-sole-l" x="88" y="456" width="42" height="4" fill="#0a0604"/>\n              <path id="m-shoe-body-r"\n                d="M187 432 Q192 444 184 458 L152 458 L152 432 Z"\n                fill="#1c1410" stroke="#0e0a08" stroke-width="1"/>\n              <rect id="m-shoe-sole-r" x="150" y="456" width="42" height="4" fill="#0a0604"/>\n            </svg>';
+const SVG_WOMAN = '<svg id="svg-woman" width="280" height="500" viewBox="0 0 280 500" xmlns="http://www.w3.org/2000/svg">\n              <defs>\n                <linearGradient id="skin-w" x1="0" x2="0" y1="0" y2="1">\n                  <stop offset="0%" stop-color="#e8c8a8"/>\n                  <stop offset="100%" stop-color="#d4a98a"/>\n                </linearGradient>\n              </defs>\n              <!-- HEAD -->\n              <ellipse cx="140" cy="44" rx="18" ry="24" fill="url(#skin-w)"/>\n              <!-- long hair with subtle volume -->\n              <path d="M122 36 Q120 18 140 18 Q160 18 158 36 Q164 60 158 96 L150 92 Q156 64 154 38 Q146 30 140 30 Q134 30 126 38 Q124 64 130 92 L122 96 Q116 60 122 36 Z" fill="#5a3a26" opacity=".95"/>\n\n              <!-- NECK -->\n              <rect x="135" y="64" width="10" height="14" fill="url(#skin-w)"/>\n\n              <!-- ═══ SHIRT (top) — fitted ═══ -->\n              <path id="w-shirt-body"\n                d="M118 78 L108 94 L106 180 L112 248 L168 248 L174 180 L172 94 L162 78 L150 88 L130 88 Z"\n                fill="#efe6d6" stroke="#d8cfbf" stroke-width="1"/>\n              <path id="w-shirt-collar"\n                d="M126 78 L140 96 L154 78 L154 88 L140 104 L126 88 Z"\n                fill="#e2d9c8" stroke="#cabfae" stroke-width=".8"/>\n              <path id="w-shirt-sleeve-l"\n                d="M118 78 L102 96 L92 180 L96 220 L106 220 L110 180 L114 96 Z"\n                fill="#efe6d6" stroke="#d8cfbf" stroke-width="1"/>\n              <path id="w-shirt-sleeve-r"\n                d="M162 78 L178 96 L188 180 L184 220 L174 220 L170 180 L166 96 Z"\n                fill="#efe6d6" stroke="#d8cfbf" stroke-width="1"/>\n\n              <!-- ═══ COAT — nipped waist, flared hem ═══ -->\n              <path id="w-coat-l"\n                d="M118 78\n                   L98 98\n                   L86 156\n                   L88 196\n                   L100 220\n                   L94 280\n                   L82 320\n                   L116 320\n                   L116 220\n                   L114 180\n                   L120 132\n                   L126 102\n                   Z"\n                fill="#b8ad99" stroke="#988d79" stroke-width="1"/>\n              <path id="w-coat-r"\n                d="M162 78\n                   L182 98\n                   L194 156\n                   L192 196\n                   L180 220\n                   L186 280\n                   L198 320\n                   L164 320\n                   L164 220\n                   L166 180\n                   L160 132\n                   L154 102\n                   Z"\n                fill="#b8ad99" stroke="#988d79" stroke-width="1"/>\n              <path id="w-coat-lapel-l"\n                d="M140 78 L126 102 L120 132 L132 122 L140 110 Z"\n                fill="#a89d89" stroke="#8a7f6d" stroke-width=".8"/>\n              <path id="w-coat-lapel-r"\n                d="M140 78 L154 102 L160 132 L148 122 L140 110 Z"\n                fill="#a89d89" stroke="#8a7f6d" stroke-width=".8"/>\n              <path id="w-coat-collar"\n                d="M120 76 L140 68 L160 76 L154 102 L140 96 L126 102 Z"\n                fill="#b8ad99" stroke="#988d79" stroke-width=".8"/>\n              <path id="w-coat-sleeve-l"\n                d="M118 78 L98 98 L84 158 L82 224 L98 226 L102 158 L114 102 Z"\n                fill="#b8ad99" stroke="#988d79" stroke-width="1"/>\n              <path id="w-coat-sleeve-r"\n                d="M162 78 L182 98 L196 158 L198 224 L182 226 L178 158 L166 102 Z"\n                fill="#b8ad99" stroke="#988d79" stroke-width="1"/>\n              <!-- belt -->\n              <rect id="w-belt" x="106" y="190" width="68" height="7" fill="#7a6f5d" opacity=".55"/>\n\n              <!-- HANDS -->\n              <ellipse cx="89" cy="228" rx="8" ry="10" fill="url(#skin-w)"/>\n              <ellipse cx="191" cy="228" rx="8" ry="10" fill="url(#skin-w)"/>\n\n              <!-- ═══ PANTS / SKIRT — narrow, A-line bottom ═══ -->\n              <path id="w-pants-l"\n                d="M112 318 L98 432 L122 432 L139 322 L139 318 Z"\n                fill="#3a4250" stroke="#262b34" stroke-width="1"/>\n              <path id="w-pants-r"\n                d="M168 318 L182 432 L158 432 L141 322 L141 318 Z"\n                fill="#3a4250" stroke="#262b34" stroke-width="1"/>\n              <rect id="w-pants-waist" x="112" y="312" width="56" height="9" fill="#2c333e" stroke="#262b34" stroke-width=".8"/>\n\n              <!-- ═══ SHOES — heeled pointed-toe ═══ -->\n              <path id="w-shoe-body-l"\n                d="M96 432 Q92 442 100 452 L122 452 L122 432 Z"\n                fill="#1c1410" stroke="#0e0a08" stroke-width="1"/>\n              <rect id="w-shoe-sole-l" x="92" y="450" width="32" height="3" fill="#0a0604"/>\n              <path id="w-shoe-body-r"\n                d="M184 432 Q188 442 180 452 L158 452 L158 432 Z"\n                fill="#1c1410" stroke="#0e0a08" stroke-width="1"/>\n              <rect id="w-shoe-sole-r" x="156" y="450" width="32" height="3" fill="#0a0604"/>\n            </svg>';
+
+const GARMENT_ICONS = {
+  coat:'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M11 6 L6 10 L4 28 L11 28 L11 14 M21 6 L26 10 L28 28 L21 28 L21 14 M11 6 Q16 10 21 6 L21 14 L11 14 Z"/></svg>',
+  shirt:'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M11 7 L6 11 L4 24 L9 25 L9 26 L23 26 L23 25 L28 24 L26 11 L21 7 Q16 11 11 7 Z"/></svg>',
+  pants:'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M9 4 L23 4 L21 16 L20 28 L17 28 L16 16 L15 28 L12 28 L11 16 Z"/></svg>',
+  shoes:'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M5 22 Q5 14 12 14 L20 14 L26 18 L28 22 Z M5 22 L28 22 L28 25 L5 25 Z"/></svg>'
+};
+const GARMENT_LABELS={coat:'Coat',shirt:'Shirt',pants:'Trousers',shoes:'Shoes'};
+const GARMENT_LABELS_W={coat:'Coat',shirt:'Top',pants:'Skirt',shoes:'Heels'};
+
+const PARTS={
+  man:{
+    coat:{main:['m-coat-l','m-coat-r','m-coat-sleeve-l','m-coat-sleeve-r'],accent:['m-coat-lapel-l','m-coat-lapel-r','m-coat-collar'],accentDarken:18},
+    shirt:{main:['m-shirt-body','m-shirt-sleeve-l','m-shirt-sleeve-r'],accent:['m-shirt-collar'],accentDarken:10},
+    pants:{main:['m-pants-l','m-pants-r'],waist:['m-pants-waist'],waistDarken:22},
+    shoes:{main:['m-shoe-body-l','m-shoe-body-r'],sole:['m-shoe-sole-l','m-shoe-sole-r'],soleDarken:28}
+  },
+  woman:{
+    coat:{main:['w-coat-l','w-coat-r','w-coat-sleeve-l','w-coat-sleeve-r'],accent:['w-coat-lapel-l','w-coat-lapel-r','w-coat-collar'],accentDarken:18},
+    shirt:{main:['w-shirt-body','w-shirt-sleeve-l','w-shirt-sleeve-r'],accent:['w-shirt-collar'],accentDarken:10},
+    pants:{main:['w-pants-l','w-pants-r'],waist:['w-pants-waist'],waistDarken:22},
+    shoes:{main:['w-shoe-body-l','w-shoe-body-r'],sole:['w-shoe-sole-l','w-shoe-sole-r'],soleDarken:28}
+  }
+};
+
+let gender='man', activeGarment='coat';
+let outfitColors={coat:null,shirt:null,pants:null,shoes:null};
+
+function injectFigures(){
+  document.getElementById('outfit-figure-wrap').innerHTML = SVG_MAN + SVG_WOMAN;
+  // The extracted svg-woman already carries the original style attr; we removed display:none, so re-hide:
+  const wom = document.getElementById('svg-woman');
+  if(wom) wom.style.display='none';
+}
+
+function applyColor(garment,hex){
+  ['man','woman'].forEach(gd=>{
+    const gp=PARTS[gd][garment];if(!gp)return;
+    (gp.main||[]).forEach(id=>{const el=document.getElementById(id);if(!el)return;el.setAttribute('fill',hex);el.setAttribute('stroke',darken(hex,22));});
+    (gp.accent||[]).forEach(id=>{const el=document.getElementById(id);if(!el)return;el.setAttribute('fill',darken(hex,gp.accentDarken||14));el.setAttribute('stroke',darken(hex,(gp.accentDarken||14)+10));});
+    (gp.waist||[]).forEach(id=>{const el=document.getElementById(id);if(!el)return;el.setAttribute('fill',darken(hex,gp.waistDarken||20));el.setAttribute('stroke',darken(hex,(gp.waistDarken||20)+10));});
+    (gp.sole||[]).forEach(id=>{const el=document.getElementById(id);if(!el)return;el.setAttribute('fill',darken(hex,gp.soleDarken||28));});
+  });
+}
+
+function setGarmentColor(g,hex){
+  outfitColors[g]=hex;
+  applyColor(g,hex);
+  const swEl=document.getElementById('gswatch-'+g);
+  if(swEl) swEl.style.background=hex;
+  updateHarmony();
+  renderOutfitFamilies();
+}
+
+function updateHarmony(){
+  const chosen=Object.entries(outfitColors).filter(arr=>arr[1]);
+  const num=document.getElementById('harm-num');
+  const fill=document.getElementById('harm-bar');
+  const text=document.getElementById('harm-text');
+  if(chosen.length<2){num.textContent='—';fill.style.width='0';text.textContent='Choose at least two garments to see how the tones converse.';return;}
+  let total=0,count=0;
+  for(let i=0;i<chosen.length;i++)for(let j=i+1;j<chosen.length;j++){
+    const fa=getFam(chosen[i][1]),fb=getFam(chosen[j][1]);
+    if(fa&&fb){total+=HARMONY[fa][fb];count++;}
+  }
+  const avg=count>0?total/count:0;
+  num.textContent=avg.toFixed(2);
+  fill.style.width=(avg*100)+'%';
+  let msg,color;
+  if(avg>=.85){msg='Excellent harmony — these tones sing together.';color='#3d7a4a';}
+  else if(avg>=.70){msg='Good combination — balanced and quietly confident.';color='#5a6a30';}
+  else if(avg>=.55){msg='Some tension — bold, but it can hold.';color='#8a6618';}
+  else{msg='High contrast — consider softening one tone.';color='#a83820';}
+  fill.style.background=color;
+  text.innerHTML='<span style="color:'+color+'">'+msg+'</span>';
+}
+
+function isOutfitCompat(hex){
+  const otherColors=Object.entries(outfitColors).filter(arr=>arr[1]&&arr[0]!==activeGarment).map(arr=>arr[1]);
+  if(otherColors.length===0)return true;
+  const tf=getFam(hex),ti=getIdx(hex);
+  for(const other of otherColors){
+    const sf=getFam(other),si=getIdx(other);
+    if(HARMONY[sf][tf]<.62)return false;
+    if(sf===tf&&Math.abs(ti-si)<3)return false;
+  }
+  return true;
+}
+
+function buildGarmentRail(){
+  const rail=document.getElementById('garment-rail');rail.innerHTML='';
+  const labels=gender==='woman'?GARMENT_LABELS_W:GARMENT_LABELS;
+  ['coat','shirt','pants','shoes'].forEach(g=>{
+    const btn=document.createElement('button');
+    btn.className='garment-btn'+(g===activeGarment?' active':'');
+    btn.id='gbtn-'+g;
+    btn.onclick=()=>selectGarment(g);
+    const sw=outfitColors[g];
+    btn.innerHTML='<div class="garment-icon">'+GARMENT_ICONS[g]+'</div><div class="garment-title">'+labels[g]+'</div><div class="garment-swatch" id="gswatch-'+g+'" '+(sw?'style="background:'+sw+'"':'')+'></div>';
+    rail.appendChild(btn);
+  });
+}
+
+function renderOutfitFamilies(){
+  const c=document.getElementById('outfit-families');c.innerHTML='';
+  const currentHex=outfitColors[activeGarment];
+  const othersChosen=Object.entries(outfitColors).filter(arr=>arr[1]&&arr[0]!==activeGarment).length;
+  COLOR_FAMILIES.forEach(f=>{
+    const row=document.createElement('div');row.className='outfit-family-row';
+    const nm=document.createElement('div');nm.className='outfit-family-name';nm.textContent=f.name.replace('-',' ');row.appendChild(nm);
+    const sr=document.createElement('div');sr.className='outfit-shades';
+    f.shades.forEach(hex=>{
+      const sw=document.createElement('div');sw.className='oswatch';sw.style.background=hex;
+      sw.setAttribute('aria-label',hex.toUpperCase());
+      if(currentHex===hex){sw.classList.add('oselected');sw.onclick=()=>setGarmentColor(activeGarment,hex);}
+      else if(othersChosen>0&&!isOutfitCompat(hex)){sw.classList.add('oincompat');}
+      else{if(othersChosen>0)sw.classList.add('ocompat');sw.onclick=()=>setGarmentColor(activeGarment,hex);}
+      sr.appendChild(sw);
+    });
+    row.appendChild(sr);c.appendChild(row);
+  });
+}
+
+function selectGarment(g){
+  activeGarment=g;
+  document.querySelectorAll('.garment-btn').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById('gbtn-'+g);if(el)el.classList.add('active');
+  const labels=gender==='woman'?GARMENT_LABELS_W:GARMENT_LABELS;
+  document.getElementById('outfit-prompt').innerHTML='Choose a tone for the <strong>'+labels[g].toLowerCase()+'</strong>';
+  renderOutfitFamilies();
+}
+
+function setGender(g){
+  gender=g;
+  document.getElementById('svg-man').style.display=g==='man'?'':'none';
+  document.getElementById('svg-woman').style.display=g==='woman'?'':'none';
+  document.getElementById('gtbtn-man').classList.toggle('active',g==='man');
+  document.getElementById('gtbtn-woman').classList.toggle('active',g==='woman');
+  buildGarmentRail();
+  selectGarment(activeGarment);
+}
+
+const DEFAULTS={
+  man:{'m-coat-l':'#b8ad99','m-coat-r':'#b8ad99','m-coat-sleeve-l':'#b8ad99','m-coat-sleeve-r':'#b8ad99','m-coat-lapel-l':'#a89d89','m-coat-lapel-r':'#a89d89','m-coat-collar':'#b8ad99','m-shirt-body':'#efe6d6','m-shirt-sleeve-l':'#efe6d6','m-shirt-sleeve-r':'#efe6d6','m-shirt-collar':'#e2d9c8','m-pants-l':'#3a4250','m-pants-r':'#3a4250','m-pants-waist':'#2c333e','m-shoe-body-l':'#1c1410','m-shoe-body-r':'#1c1410','m-shoe-sole-l':'#0a0604','m-shoe-sole-r':'#0a0604'},
+  woman:{'w-coat-l':'#b8ad99','w-coat-r':'#b8ad99','w-coat-sleeve-l':'#b8ad99','w-coat-sleeve-r':'#b8ad99','w-coat-lapel-l':'#a89d89','w-coat-lapel-r':'#a89d89','w-coat-collar':'#b8ad99','w-shirt-body':'#efe6d6','w-shirt-sleeve-l':'#efe6d6','w-shirt-sleeve-r':'#efe6d6','w-shirt-collar':'#e2d9c8','w-pants-l':'#3a4250','w-pants-r':'#3a4250','w-pants-waist':'#2c333e','w-shoe-body-l':'#1c1410','w-shoe-body-r':'#1c1410','w-shoe-sole-l':'#0a0604','w-shoe-sole-r':'#0a0604'}
+};
+function resetOutfit(){
+  outfitColors={coat:null,shirt:null,pants:null,shoes:null};
+  ['man','woman'].forEach(gd=>{
+    Object.entries(DEFAULTS[gd]).forEach(pair=>{
+      const el=document.getElementById(pair[0]);
+      if(el){el.setAttribute('fill',pair[1]);el.setAttribute('stroke',darken(pair[1],18));}
+    });
+  });
+  buildGarmentRail();
+  updateHarmony();
+  renderOutfitFamilies();
+}
+
+function saveOutfitAsPalette(){
+  const colors=['coat','shirt','pants','shoes'].map(g=>outfitColors[g]).filter(Boolean);
+  if(colors.length===0){showToast('No colors yet');return;}
+  const lib=loadLibrary();
+  lib.unshift({id:Date.now(),name:'Outfit · '+fmtDate(Date.now()),colors:colors,created:Date.now()});
+  saveLibrary(lib);
+  showToast('Saved to library');
+}
+
+/* ════════════════════════════════════════════
+   TOAST
+   ════════════════════════════════════════════ */
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg||'Done';
+  t.classList.add('show');clearTimeout(t._h);
+  t._h=setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+/* ════════════════════════════════════════════
+   INIT
+   ════════════════════════════════════════════ */
+buildHeroRibbon();
+injectFigures();
+buildGarmentRail();
+updatePalette();
+renderOutfitFamilies();
+renderLibrary();
+
+// Save modal — submit on Enter, close on Escape
+document.getElementById('save-name').addEventListener('keydown',(e)=>{
+  if(e.key==='Enter')confirmSave();
+  if(e.key==='Escape')closeSaveModal();
+});
+
+// Back-button / hardware back: if a sheet is open, close it first
+window.addEventListener('popstate',()=>{
+  const sm=document.getElementById('save-modal');
+  const em=document.getElementById('export-back');
+  if(sm.classList.contains('show')){sm.classList.remove('show');history.pushState({},'');return;}
+  if(em.classList.contains('show')){em.classList.remove('show');history.pushState({},'');return;}
+});
+history.pushState({},'');
+</script>
+</body>
+</html>

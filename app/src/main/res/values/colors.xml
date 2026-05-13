@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="tonal_primary">#1C1612</color>
+    <color name="tonal_background">#F1EBDD</color>
+    <color name="tonal_accent">#C84A1A</color>
+</resources>
